@@ -15,6 +15,7 @@ const emit = defineEmits<{
 const isDragging = ref(false)
 const isEditing = ref(false)
 const editTitle = ref('')
+const editDescription = ref('')
 
 const handleDragStart = (e: DragEvent) => {
   isDragging.value = true
@@ -28,12 +29,13 @@ const handleDragEnd = () => {
 
 const startEdit = () => {
   editTitle.value = props.task.title
+  editDescription.value = props.task.description || ''
   isEditing.value = true
 }
 
 const saveEdit = () => {
   if (editTitle.value.trim()) {
-    emit('update', { title: editTitle.value })
+    emit('update', { title: editTitle.value, description: editDescription.value })
   }
   isEditing.value = false
 }
@@ -49,29 +51,48 @@ const saveEdit = () => {
   >
     <div class="flex items-start justify-between gap-2">
       <div class="flex-1 min-w-0">
-        <div v-if="isEditing">
+        <div v-if="isEditing" class="space-y-2">
           <input 
             v-model="editTitle"
-            @keyup.enter="saveEdit"
             @keyup.escape="isEditing = false"
-            @blur="saveEdit"
             class="w-full px-2 py-1 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             autofocus
           />
+          <textarea 
+            v-model="editDescription"
+            placeholder="Description..."
+            rows="2"
+            class="w-full px-2 py-1 bg-slate-600 border border-slate-500 rounded text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+          ></textarea>
+          <div class="flex gap-2">
+            <button 
+              @click="saveEdit"
+              class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs rounded transition-colors"
+            >
+              Save
+            </button>
+            <button 
+              @click="isEditing = false"
+              class="px-3 py-1 text-slate-400 hover:text-white text-xs transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-        <h3 
-          v-else 
-          class="text-white font-medium text-sm truncate cursor-pointer hover:text-indigo-300"
-          @dblclick="startEdit"
-        >
-          {{ task.title }}
-        </h3>
-        <p v-if="task.description" class="text-slate-400 text-xs mt-1 line-clamp-2">
-          {{ task.description }}
-        </p>
+        <template v-else>
+          <h3 
+            class="text-white font-medium text-sm truncate cursor-pointer hover:text-indigo-300"
+            @dblclick="startEdit"
+          >
+            {{ task.title }}
+          </h3>
+          <p v-if="task.description" class="text-slate-400 text-xs mt-1 line-clamp-2">
+            {{ task.description }}
+          </p>
+        </template>
       </div>
       
-      <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div v-if="!isEditing" class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button 
           @click="startEdit"
           class="p-1 text-slate-400 hover:text-white hover:bg-slate-600 rounded transition-colors"
@@ -93,7 +114,7 @@ const saveEdit = () => {
       </div>
     </div>
     
-    <div class="mt-3 flex items-center justify-between">
+    <div v-if="!isEditing" class="mt-3 flex items-center justify-between">
       <span class="text-xs text-slate-500">
         {{ new Date(task.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) }}
       </span>

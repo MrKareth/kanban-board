@@ -16,15 +16,18 @@ const getTasksByStatus = (status: string) => {
 }
 
 const newTaskTitle = ref('')
+const newTaskDescription = ref('')
 const showAddTask = ref(false)
 
 const handleAddTask = async () => {
   if (!newTaskTitle.value.trim()) return
   await addTask({
     title: newTaskTitle.value,
+    description: newTaskDescription.value,
     status: 'todo'
   })
   newTaskTitle.value = ''
+  newTaskDescription.value = ''
   showAddTask.value = false
 }
 
@@ -69,15 +72,28 @@ const handleDragOver = (e: DragEvent) => {
     <div v-if="showAddTask" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click.self="showAddTask = false">
       <div class="bg-slate-800 rounded-xl p-6 w-full max-w-md border border-slate-700">
         <h2 class="text-lg font-semibold text-white mb-4">Add New Task</h2>
-        <input 
-          v-model="newTaskTitle"
-          @keyup.enter="handleAddTask"
-          type="text" 
-          placeholder="Task title..."
-          class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          autofocus
-        />
-        <div class="flex justify-end gap-3 mt-4">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1">Title</label>
+            <input 
+              v-model="newTaskTitle"
+              type="text" 
+              placeholder="Task title..."
+              class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              autofocus
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1">Description</label>
+            <textarea 
+              v-model="newTaskDescription"
+              placeholder="Add details about this task..."
+              rows="3"
+              class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+            ></textarea>
+          </div>
+        </div>
+        <div class="flex justify-end gap-3 mt-6">
           <button 
             @click="showAddTask = false"
             class="px-4 py-2 text-slate-400 hover:text-white transition-colors"

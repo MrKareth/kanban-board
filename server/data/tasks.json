@@ -24,23 +24,58 @@
     {
       "id": "4",
       "title": "Implement WebSocket for real-time updates",
-      "description": "Added server-sent events for live task synchronization",
-      "status": "in-progress",
+      "description": "Added WebSocket for live task synchronization",
+      "status": "done",
       "createdAt": "2026-02-16T07:04:00.000Z"
     },
     {
       "id": "5",
       "title": "Add drag and drop functionality",
       "description": "Enable moving tasks between columns via drag and drop",
-      "status": "todo",
+      "status": "done",
       "createdAt": "2026-02-16T07:05:00.000Z"
     },
     {
       "id": "6",
       "title": "Style and polish the UI",
-      "description": "Add transitions, hover effects, and final styling touches",
-      "status": "todo",
+      "description": "Added transitions, hover effects, and dark theme styling",
+      "status": "done",
       "createdAt": "2026-02-16T07:06:00.000Z"
+    },
+    {
+      "id": "1739686800000",
+      "title": "Research NutriPlan competitor features",
+      "description": "Analyze top meal planning apps (MyFitnessPal, LoseIt, Cronometer, Yazio) to identify feature gaps and opportunities for NutriPlan differentiation. Focus on blood glucose tracking and UK-specific features.",
+      "status": "done",
+      "createdAt": "2026-02-16T08:00:00.000Z"
+    },
+    {
+      "id": "1739686801000",
+      "title": "Draft Foxen Digital website homepage content",
+      "description": "Write compelling homepage copy for foxendigital.co.uk including: hero section, value proposition, services overview, NutriPlan showcase section, and open source contributions highlight. Keep tone professional but approachable.",
+      "status": "done",
+      "createdAt": "2026-02-16T08:00:01.000Z"
+    },
+    {
+      "id": "1739686802000",
+      "title": "Create personal habit tracker mini-app MVP",
+      "description": "Build a simple Laravel app to track Danny's personal goals: daily weight logging, walking distance, water intake, and mood/habit tracking. Should have a clean dashboard showing progress toward goals (25kg loss, 3 miles/day walking).",
+      "status": "done",
+      "createdAt": "2026-02-16T08:00:02.000Z"
+    },
+    {
+      "id": "1739686803000",
+      "title": "Research trending Laravel package opportunities",
+      "description": "Analyze Packagist and Laravel ecosystem to identify gaps where a new open source package could add value. Look for: workflow automation, health/fitness integrations, UK-specific utilities. Document 3-5 potential package ideas with market justification.",
+      "status": "done",
+      "createdAt": "2026-02-16T08:00:03.000Z"
+    },
+    {
+      "id": "1739686804000",
+      "title": "Draft blog post: Building NutriPlan in the open",
+      "description": "Write a 1000-1500 word blog post about the NutriPlan journey: why it was built, the problem it solves, technical decisions (Laravel, open source), and future roadmap. Target audience: Laravel developers and potential Foxen Digital clients.",
+      "status": "done",
+      "createdAt": "2026-02-16T08:00:04.000Z"
     }
   ]
 }
