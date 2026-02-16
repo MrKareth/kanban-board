@@ -1,0 +1,46 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Set up Nuxt project with Tailwind CSS",
+      "description": "Created the basic Nuxt 4 project structure with Tailwind styling",
+      "status": "done",
+      "createdAt": "2026-02-16T07:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Build server API endpoints",
+      "description": "Created REST API for CRUD operations on tasks",
+      "status": "done",
+      "createdAt": "2026-02-16T07:02:00.000Z"
+    },
+    {
+      "id": "3",
+      "title": "Create Kanban board UI",
+      "description": "Built the three-column layout with task cards",
+      "status": "done",
+      "createdAt": "2026-02-16T07:03:00.000Z"
+    },
+    {
+      "id": "4",
+      "title": "Implement WebSocket for real-time updates",
+      "description": "Added server-sent events for live task synchronization",
+      "status": "in-progress",
+      "createdAt": "2026-02-16T07:04:00.000Z"
+    },
+    {
+      "id": "5",
+      "title": "Add drag and drop functionality",
+      "description": "Enable moving tasks between columns via drag and drop",
+      "status": "todo",
+      "createdAt": "2026-02-16T07:05:00.000Z"
+    },
+    {
+      "id": "6",
+      "title": "Style and polish the UI",
+      "description": "Add transitions, hover effects, and final styling touches",
+      "status": "todo",
+      "createdAt": "2026-02-16T07:06:00.000Z"
+    }
+  ]
+}
