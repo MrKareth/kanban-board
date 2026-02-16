@@ -14,8 +14,15 @@ const emit = defineEmits<{
 
 const isDragging = ref(false)
 const isEditing = ref(false)
+const showMenu = ref(false)
+const menuRef = ref<HTMLElement | null>(null)
 const editTitle = ref('')
 const editDescription = ref('')
+
+// Close menu when clicking outside
+onClickOutside(menuRef, () => {
+  showMenu.value = false
+})
 
 const handleDragStart = (e: DragEvent) => {
   isDragging.value = true
@@ -28,6 +35,7 @@ const handleDragEnd = () => {
 }
 
 const startEdit = () => {
+  showMenu.value = false
   editTitle.value = props.task.title
   editDescription.value = props.task.description || ''
   isEditing.value = true
@@ -38,6 +46,21 @@ const saveEdit = () => {
     emit('update', { title: editTitle.value, description: editDescription.value })
   }
   isEditing.value = false
+}
+
+const handleAction = (action: string) => {
+  showMenu.value = false
+  switch (action) {
+    case 'archive':
+      emit('update', { status: 'archived' })
+      break
+    case 'restore':
+      emit('update', { status: 'done' })
+      break
+    case 'delete':
+      emit('delete')
+      break
+  }
 }
 </script>
 
@@ -92,45 +115,63 @@ const saveEdit = () => {
         </template>
       </div>
       
-      <div v-if="!isEditing" class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div v-if="!isEditing" class="relative" ref="menuRef">
         <button 
-          v-if="task.status === 'done'"
-          @click="$emit('update', { status: 'archived' })"
-          class="p-1 text-slate-400 hover:text-slate-200 hover:bg-slate-600 rounded transition-colors"
-          title="Archive"
+          @click.stop="showMenu = !showMenu"
+          class="p-1 text-slate-400 hover:text-white hover:bg-slate-600 rounded transition-colors opacity-0 group-hover:opacity-100"
+          title="More options"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
           </svg>
         </button>
-        <button 
-          v-if="task.status === 'archived'"
-          @click="$emit('update', { status: 'done' })"
-          class="p-1 text-slate-400 hover:text-green-400 hover:bg-slate-600 rounded transition-colors"
-          title="Restore"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-          </svg>
-        </button>
-        <button 
-          @click="startEdit"
-          class="p-1 text-slate-400 hover:text-white hover:bg-slate-600 rounded transition-colors"
-          title="Edit"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-        </button>
-        <button 
-          @click="$emit('delete')"
-          class="p-1 text-slate-400 hover:text-red-400 hover:bg-slate-600 rounded transition-colors"
-          title="Delete"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </button>
+        
+        <!-- Dropdown Menu -->
+        <Transition name="menu">
+          <div 
+            v-if="showMenu"
+            class="absolute right-0 top-full mt-1 w-36 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-10 overflow-hidden"
+          >
+            <button 
+              @click="startEdit"
+              class="w-full px-3 py-2 text-left text-sm text-slate-300 hover:bg-slate-700 flex items-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Edit
+            </button>
+            <button 
+              v-if="task.status === 'done'"
+              @click="handleAction('archive')"
+              class="w-full px-3 py-2 text-left text-sm text-slate-300 hover:bg-slate-700 flex items-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+              Archive
+            </button>
+            <button 
+              v-if="task.status === 'archived'"
+              @click="handleAction('restore')"
+              class="w-full px-3 py-2 text-left text-sm text-slate-300 hover:bg-slate-700 flex items-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+              </svg>
+              Restore
+            </button>
+            <button 
+              @click="handleAction('delete')"
+              class="w-full px-3 py-2 text-left text-sm text-red-400 hover:bg-slate-700 flex items-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Delete
+            </button>
+          </div>
+        </Transition>
       </div>
     </div>
     
@@ -141,3 +182,15 @@ const saveEdit = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.menu-enter-active,
+.menu-leave-active {
+  transition: all 0.15s ease;
+}
+.menu-enter-from,
+.menu-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+</style>
