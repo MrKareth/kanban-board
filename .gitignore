@@ -23,4 +23,4 @@ logs
 .env.*
 !.env.example
 
-server/data/tasks.json
+server/data/*.json
