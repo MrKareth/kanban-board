@@ -3,6 +3,7 @@ import { join } from 'path'
 import { broadcastTaskUpdate } from '../stream'
 
 const TASKS_FILE = join(process.cwd(), 'server/data/tasks.json')
+const DELETED_TASKS_FILE = join(process.cwd(), 'server/data/deleted-tasks.json')
 
 export default defineEventHandler((event) => {
   const id = getRouterParam(event, 'id')
@@ -18,6 +19,19 @@ export default defineEventHandler((event) => {
     throw createError({ statusCode: 404, message: 'Task not found' })
   }
   
+  // Get the task before removing it
+  const deletedTask = data.tasks[taskIndex]
+  deletedTask.deletedAt = new Date().toISOString()
+  
+  // Save to deleted-tasks.json
+  let deletedData = { tasks: [] }
+  if (existsSync(DELETED_TASKS_FILE)) {
+    deletedData = JSON.parse(readFileSync(DELETED_TASKS_FILE, 'utf-8'))
+  }
+  deletedData.tasks.push(deletedTask)
+  writeFileSync(DELETED_TASKS_FILE, JSON.stringify(deletedData, null, 2))
+  
+  // Remove from tasks.json
   data.tasks.splice(taskIndex, 1)
   writeFileSync(TASKS_FILE, JSON.stringify(data, null, 2))
   
