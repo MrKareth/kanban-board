@@ -8,8 +8,15 @@ onMounted(() => {
 const columns = [
   { id: 'todo', title: 'To Do', color: '#6366f1' },
   { id: 'in-progress', title: 'In Progress', color: '#f59e0b' },
-  { id: 'done', title: 'Done', color: '#10b981' }
+  { id: 'done', title: 'Done', color: '#10b981' },
+  { id: 'archived', title: 'Archived', color: '#6b7280' }
 ]
+
+const showArchived = ref(false)
+
+const visibleColumns = computed(() => {
+  return showArchived.value ? columns : columns.filter(c => c.id !== 'archived')
+})
 
 const getTasksByStatus = (status: string) => {
   return tasks.value.filter(t => t.status === status)
@@ -56,15 +63,28 @@ const handleDragOver = (e: DragEvent) => {
           </div>
           <h1 class="text-xl font-semibold text-white">Kareth's Task Board</h1>
         </div>
-        <button 
-          @click="showAddTask = !showAddTask"
-          class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center gap-2 transition-colors"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Add Task
-        </button>
+        <div class="flex items-center gap-3">
+          <button 
+            @click="showArchived = !showArchived"
+            class="px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            :class="showArchived ? 'bg-slate-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white'"
+            title="Toggle archived column"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+            </svg>
+            <span class="hidden sm:inline">Archived</span>
+          </button>
+          <button 
+            @click="showAddTask = !showAddTask"
+            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center gap-2 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Add Task
+          </button>
+        </div>
       </div>
     </header>
 
@@ -111,9 +131,12 @@ const handleDragOver = (e: DragEvent) => {
     </div>
 
     <main class="max-w-7xl mx-auto px-6 py-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div 
+        class="grid gap-6"
+        :class="showArchived ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4' : 'grid-cols-1 md:grid-cols-3'"
+      >
         <TaskColumn
-          v-for="column in columns"
+          v-for="column in visibleColumns"
           :key="column.id"
           :column="column"
           :tasks="getTasksByStatus(column.id)"

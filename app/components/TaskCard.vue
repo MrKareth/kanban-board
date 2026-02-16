@@ -94,6 +94,26 @@ const saveEdit = () => {
       
       <div v-if="!isEditing" class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button 
+          v-if="task.status !== 'archived'"
+          @click="$emit('update', { status: 'archived' })"
+          class="p-1 text-slate-400 hover:text-slate-200 hover:bg-slate-600 rounded transition-colors"
+          title="Archive"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+          </svg>
+        </button>
+        <button 
+          v-if="task.status === 'archived'"
+          @click="$emit('update', { status: 'todo' })"
+          class="p-1 text-slate-400 hover:text-green-400 hover:bg-slate-600 rounded transition-colors"
+          title="Restore"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+          </svg>
+        </button>
+        <button 
           @click="startEdit"
           class="p-1 text-slate-400 hover:text-white hover:bg-slate-600 rounded transition-colors"
           title="Edit"
