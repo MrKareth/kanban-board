@@ -94,7 +94,7 @@ const saveEdit = () => {
       
       <div v-if="!isEditing" class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button 
-          v-if="task.status !== 'archived'"
+          v-if="task.status === 'done'"
           @click="$emit('update', { status: 'archived' })"
           class="p-1 text-slate-400 hover:text-slate-200 hover:bg-slate-600 rounded transition-colors"
           title="Archive"
@@ -105,7 +105,7 @@ const saveEdit = () => {
         </button>
         <button 
           v-if="task.status === 'archived'"
-          @click="$emit('update', { status: 'todo' })"
+          @click="$emit('update', { status: 'done' })"
           class="p-1 text-slate-400 hover:text-green-400 hover:bg-slate-600 rounded transition-colors"
           title="Restore"
         >
