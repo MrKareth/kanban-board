@@ -4,6 +4,7 @@ export interface Task {
   description?: string
   status: 'todo' | 'in-progress' | 'done' | 'archived'
   createdAt: string
+  createdBy?: 'Danny' | 'Kareth'
 }
 
 const tasks = ref<Task[]>([])

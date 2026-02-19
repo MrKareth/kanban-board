@@ -18,6 +18,11 @@ const visibleColumns = computed(() => {
   return showArchived.value ? columns : columns.filter(c => c.id !== 'archived')
 })
 
+const viewedTask = computed(() => {
+  if (!viewTaskId.value) return null
+  return tasks.value.find(t => t.id === viewTaskId.value) || null
+})
+
 const getTasksByStatus = (status: string) => {
   return tasks.value.filter(t => t.status === status)
 }
@@ -25,6 +30,7 @@ const getTasksByStatus = (status: string) => {
 const newTaskTitle = ref('')
 const newTaskDescription = ref('')
 const showAddTask = ref(false)
+const viewTaskId = ref<string | null>(null)
 
 const handleAddTask = async () => {
   if (!newTaskTitle.value.trim()) return
@@ -48,6 +54,14 @@ const handleDrop = async (e: DragEvent, status: string) => {
 
 const handleDragOver = (e: DragEvent) => {
   e.preventDefault()
+}
+
+const handleViewTask = (taskId: string) => {
+  viewTaskId.value = taskId
+}
+
+const closeTaskDetail = () => {
+  viewTaskId.value = null
 }
 </script>
 
@@ -130,6 +144,12 @@ const handleDragOver = (e: DragEvent) => {
       </div>
     </div>
 
+    <!-- Task Detail Modal -->
+    <TaskDetailModal 
+      :task="viewedTask"
+      @close="closeTaskDetail"
+    />
+
     <main class="max-w-7xl mx-auto px-6 py-8">
       <div 
         class="grid gap-6"
@@ -144,6 +164,7 @@ const handleDragOver = (e: DragEvent) => {
           @dragover="handleDragOver"
           @update-task="updateTask"
           @delete-task="deleteTask"
+          @view-task="handleViewTask"
         />
       </div>
     </main>

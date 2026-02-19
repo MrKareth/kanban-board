@@ -10,6 +10,7 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   update: [updates: Partial<Task>]
   delete: []
+  view: []
 }>()
 
 const isDragging = ref(false)
@@ -105,7 +106,7 @@ const handleAction = (action: string) => {
         <template v-else>
           <h3 
             class="text-white font-medium text-sm truncate cursor-pointer hover:text-indigo-300"
-            @dblclick="startEdit"
+            @click="emit('view')"
           >
             {{ task.title }}
           </h3>
@@ -178,6 +179,13 @@ const handleAction = (action: string) => {
     <div v-if="!isEditing" class="mt-3 flex items-center justify-between">
       <span class="text-xs text-slate-500">
         {{ new Date(task.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) }}
+      </span>
+      <span 
+        v-if="task.createdBy" 
+        class="text-xs px-2 py-0.5 rounded-full"
+        :class="task.createdBy === 'Kareth' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-emerald-500/20 text-emerald-300'"
+      >
+        {{ task.createdBy }}
       </span>
     </div>
   </div>

@@ -17,7 +17,8 @@ export default defineEventHandler(async (event) => {
     title: body.title || 'Untitled Task',
     description: body.description || '',
     status: body.status || 'todo',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    createdBy: 'Danny' as const
   }
   
   data.tasks.push(newTask)

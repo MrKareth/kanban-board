@@ -19,6 +19,7 @@ const emit = defineEmits<{
   dragover: [e: DragEvent]
   'update-task': [id: string, updates: Partial<Task>]
   'delete-task': [id: string]
+  'view-task': [id: string]
 }>()
 </script>
 
@@ -49,6 +50,7 @@ const emit = defineEmits<{
           :task="task"
           @update="(updates) => $emit('update-task', task.id, updates)"
           @delete="$emit('delete-task', task.id)"
+          @view="$emit('view-task', task.id)"
         />
       </TransitionGroup>
       
